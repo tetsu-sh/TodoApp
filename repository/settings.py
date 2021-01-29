@@ -1,0 +1,1 @@
+SQLITE3_NAME = "./db.sqlite3"
