@@ -1,5 +1,5 @@
 from usecase.user_usecase import UserUsecase
-from repository.user_repository import UserRepository
+from infrastructure.sqlite3.user_repository import UserRepository
 from logging import getLogger
 from common.logger import get_logger
 logger = getLogger(__name__)
@@ -15,6 +15,14 @@ app = FastAPI()
 
 class User(BaseModel):
     user_name: str
+
+    class Config:
+        schema_extra = {
+            "example":{
+                "user_name":"test_user"
+            }
+
+        }
 
 @app.post("/user")
 def create_user(user: User):
