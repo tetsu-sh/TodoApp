@@ -9,6 +9,6 @@ class UserUsecase:
     def create_user(self,user_name):
         user_id = uuid.uuid4()
         user = User(user_id = user_id, user_name = user_name)
-        self.user_repository.create_user(user)
+        self.user_repository.create(user)
         return
 
