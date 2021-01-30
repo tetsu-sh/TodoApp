@@ -11,4 +11,10 @@ class UserUsecase:
         user = User(user_id = user_id, user_name = user_name)
         self.user_repository.create(user)
         return
-
+    
+    def get_all_users(self):
+        users = self.user_repository.load()
+        return users
+        
+class UserQuery:
+    pass
