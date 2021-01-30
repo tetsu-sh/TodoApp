@@ -1,7 +1,7 @@
 
-from settings import SQLITE3_NAME
-import db
-from user_repository import *
+from infrastructure.sqlite3.settings import SQLITE3_NAME
+import infrastructure.sqlite3.db as db
+from infrastructure.sqlite3.user_repository import *
 import os
  
  
