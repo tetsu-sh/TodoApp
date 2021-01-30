@@ -1,0 +1,1 @@
+SQLITE3_NAME = "infrastructure.sqlite3.db.sqlite3"
