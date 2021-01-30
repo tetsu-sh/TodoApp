@@ -9,5 +9,5 @@ class IUserRepository(metaclass = ABCMeta):
     def load(self):
         pass
 
-    def find(self):
+    def find(self, user_id):
         pass
