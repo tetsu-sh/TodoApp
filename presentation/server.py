@@ -1,5 +1,5 @@
 from usecase.user_usecase import UserUsecase
-from infrastructure.sqlite3.user_repository import UserRepository
+from infra.sqlite3.user_repository import UserRepository
 from logging import getLogger
 from common.logger import get_logger
 logger = getLogger(__name__)
@@ -35,3 +35,14 @@ def create_user(user: User):
 
     message = {"message": "success"}
     return message
+
+
+@app.get("/users")
+def get_all_users():
+    user_repository = UserRepository()
+    user_usecase = UserUsecase(user_repository)
+    users = user_usecase.get_all_users()
+    response={
+        "users":users
+    }
+    return response
