@@ -15,6 +15,10 @@ class UserUsecase:
     def get_all_users(self):
         users = self.user_repository.load()
         return users
+    
+    def delete_user(self, user_id):
+        self.user_repository.delete(user_id)
+        return
         
 class UserQuery:
     pass

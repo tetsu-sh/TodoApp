@@ -11,3 +11,6 @@ class IUserRepository(metaclass = ABCMeta):
 
     def find(self, user_id):
         pass
+
+    def delete(self, user_id):
+        pass

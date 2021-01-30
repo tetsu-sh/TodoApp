@@ -46,3 +46,12 @@ def get_all_users():
         "users":users
     }
     return response
+
+@app.delete("/user/{user_id}")
+def delete_user(user_id):
+    user_repository = UserRepository()
+    user_usecase = UserUsecase(user_repository)
+    user_usecase.delete_user(user_id)
+
+    message = {"message": "success"}
+    return message

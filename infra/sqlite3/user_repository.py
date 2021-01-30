@@ -22,14 +22,22 @@ class UserRepository(IUserRepository):
         db.session.add(new_user)
         db.session.commit()
         db.session.close()
+        return
     
     def load(self):
         users = db.session.query(User).all()
+        db.session.close()
         print(users)
         return users
 
     def find(self):
         pass
+
+    def delete(self, user_id):
+        db.session.query(User).filter(User.user_id==user_id).delete()
+        db.session.commit()
+        db.session.close()
+        return
 
 
 class User(Base):
