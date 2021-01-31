@@ -194,3 +194,14 @@ def get_tokei_users():
         "users":users
     }
     return response
+
+@app.get("/tokei/rank")
+def get_tokei_rank():
+    user_repository = UserRepository()
+    user_usecase = UserUsecase(user_repository)
+    users = user_usecase.user_rank()
+
+    response={
+        "users":users
+    }
+    return response

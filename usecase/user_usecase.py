@@ -30,3 +30,8 @@ class UserUsecase:
         query = UserQuery()
         users = query.count_task_on_user()
         return users
+    
+    def user_rank(self):
+        query = UserQuery()
+        users = query.user_rank()
+        return users

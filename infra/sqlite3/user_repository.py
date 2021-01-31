@@ -54,6 +54,7 @@ class UserQuery:
 
     def query_user_task(self, user_id):
         tasks = db.session.query(Task,Assign).filter(Assign.user_id==user_id).filter(Assign.task_id==Task.task_id).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+        db.session.close()
         return tasks
     
     def count_task_on_user(self):
@@ -63,9 +64,18 @@ class UserQuery:
             task_dict = {}
             for p in Priority:
                 task_dict[p.value]=db.session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(1)).count()
-            logger.info(task_dict)
-            user_list.append({user.user_id:task_dict})
-        logger.info(user_list)
+            user_list.append({"user_id":user.user_id,"task_count":task_dict})
+        db.session.close()
+        return user_list
+
+    def user_rank(self):
+        users = db.session.query(User).all()
+        user_list = []
+        for user in users:
+            tasks = db.session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(2)).count()
+            user_list.append({"user_id":user.user_id,"count":tasks})
+        user_list = sorted(user_list,key=lambda x:x["count"])
+        db.session.close()
         return user_list
 
 class User(Base):
