@@ -4,15 +4,26 @@ from domain.task_domain import Task, Status, Priority
 
 from infra.sqlite3.db import Base
 import infra.sqlite3.db as db
+from infra.sqlite3.user_repository import User
+from infra.sqlite3.assign_repository import Assign
 
 import enum
-from sqlalchemy import Column, String, DateTime, ForeignKey, Enum
+from sqlalchemy import Column, String, DateTime, ForeignKey, Enum, desc
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
+
 from infra.sqlite3.settings import SQLITE3_NAME
 
 import hashlib
+
+
+from logging import getLogger
+from common.logger import get_logger
+
+
+logger = getLogger(__name__)
+logger = get_logger(logger)
 
 
 class TaskRepository(ITaskRepository):
@@ -37,7 +48,7 @@ class TaskRepository(ITaskRepository):
     def load(self):
         tasks = db.session.query(Task).all()
         db.session.close()
-        print(tasks)
+        logger.info(tasks)
         return tasks
     
     def update_status(self,task_id,status):
@@ -58,7 +69,18 @@ class TaskRepository(ITaskRepository):
         db.session.close()
         return
 
+class TaskQuery():
+    def __init__(self) -> None:
+        pass
+    
+    def query_tasks_status_undone(self):
+        tasks = db.session.query(Task).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
+        logger.info(tasks)
+        return tasks
 
+    def query_tasks_with_noassign(self):
+        tasks = db.session.query(Task, Assign).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+        return tasks
 
 
 class Task(Base):
