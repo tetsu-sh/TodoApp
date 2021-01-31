@@ -72,6 +72,16 @@ def get_all_users():
     }
     return response
 
+@app.get("/user/tasks/{user_id}")
+def get_user_tasks(user_id):
+    user_repository = UserRepository()
+    user_usecase = UserUsecase(user_repository)
+    tasks = user_usecase.get_user_task(user_id)
+    response={
+        "tasks":tasks
+    }
+    return response
+
 @app.delete("/user/{user_id}")
 def delete_user(user_id):
     user_repository = UserRepository()

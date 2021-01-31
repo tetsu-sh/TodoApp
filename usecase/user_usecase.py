@@ -1,6 +1,7 @@
 from domain.user_domain import User
 import uuid
 from domain.interface_user_repository import IUserRepository
+from infra.sqlite3.user_repository import UserQuery
 
 class UserUsecase:
     def __init__(self, user_repository: IUserRepository) -> None:
@@ -20,5 +21,7 @@ class UserUsecase:
         self.user_repository.delete(user_id)
         return
         
-class UserQuery:
-    pass
+    def get_user_task(self, user_id):
+        query = UserQuery()
+        tasks = query.query_user_task(user_id)
+        return tasks

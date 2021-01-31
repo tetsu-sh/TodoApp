@@ -3,8 +3,10 @@ from domain.user_domain import User
 
 from infra.sqlite3.db import Base
 import infra.sqlite3.db as db
+from infra.sqlite3.task_repository import Task, Status
+from infra.sqlite3.assign_repository import Assign
 
-from sqlalchemy import Column, String, DateTime, ForeignKey
+from sqlalchemy import Column, String, DateTime, ForeignKey,desc
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
@@ -40,6 +42,14 @@ class UserRepository(IUserRepository):
         return
 
 
+class UserQuery:
+    def __init__(self):
+        pass
+
+    def query_user_task(self, user_id):
+        tasks = db.session.query(Task,Assign).filter(Assign.user_id==user_id).filter(Assign.task_id==Task.task_id).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+        return tasks
+        
 class User(Base):
     """
     Userテーブル
