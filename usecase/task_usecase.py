@@ -16,7 +16,7 @@ class TaskUsecase:
         タスク登録する
         """
         task_id = uuid.uuid4()
-        user = Task(
+        task = Task(
             task_id = task_id, 
             task_name = task_name, 
             status=Status(0), 
@@ -24,7 +24,7 @@ class TaskUsecase:
             description=description,
             due_date=due_date
             )
-        self.task_repository.create(user)
+        self.task_repository.create(task)
         return
 
     def get_all_tasks(self):
