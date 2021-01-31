@@ -54,7 +54,7 @@ class TaskRepository(ITaskRepository):
     def update_status(self,task_id,status):
         print(task_id)
         print(status)
-        target_task = db.session.query(Task).filter(Task.task_id==task_id)
+        target_task = db.session.query(Task).filter(Task.task_id==task_id).first()
         target_task.status = status
         db.session.commit()
         db.session.close()
