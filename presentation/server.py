@@ -2,6 +2,8 @@ from usecase.user_usecase import UserUsecase
 from infra.sqlite3.user_repository import UserRepository
 from usecase.task_usecase import TaskUsecase
 from infra.sqlite3.task_repository import TaskRepository
+from infra.sqlite3.assign_repository import AssignRepository
+
 from datetime import datetime, timedelta
 
 
@@ -86,7 +88,8 @@ def create_task(task: Task):
 
 
     task_repository = TaskRepository()
-    task_usecase = TaskUsecase(task_repository)
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.create_task(task.task_name, task.priority, task.description,task.due_date)
 
     message = {"message": "success"}
@@ -98,7 +101,8 @@ def get_all_tasks():
 
 
     task_repository = TaskRepository()
-    task_usecase = TaskUsecase(task_repository)
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
     tasks = task_usecase.get_all_tasks()
 
     response={
@@ -112,7 +116,8 @@ def task_wip(task_id):
 
 
     task_repository = TaskRepository()
-    task_usecase = TaskUsecase(task_repository)
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.task_status_wip(task_id)
 
     message = {"message": "success"}
@@ -124,9 +129,23 @@ def task_done(task_id):
 
 
     task_repository = TaskRepository()
-    task_usecase = TaskUsecase(task_repository)
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.task_status_done(task_id)
 
     message = {"message": "success"}
     return message
 
+
+@app.post("/assign/{task_id}/{user_id}")
+def assign(task_id,user_id):
+    logger.info("start create task")
+
+
+    task_repository = TaskRepository()
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
+    task_usecase.assign(task_id,user_id)
+
+    message = {"message": "success"}
+    return message
