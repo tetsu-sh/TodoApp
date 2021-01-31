@@ -3,10 +3,10 @@ from domain.user_domain import User
 
 from infra.sqlite3.db import Base
 import infra.sqlite3.db as db
-from infra.sqlite3.task_repository import Task, Status
+from infra.sqlite3.task_repository import Task, Status,Priority
 from infra.sqlite3.assign_repository import Assign
 
-from sqlalchemy import Column, String, DateTime, ForeignKey,desc
+from sqlalchemy import Column, String, DateTime, ForeignKey,desc,func
 from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
@@ -14,6 +14,12 @@ from infra.sqlite3.settings import SQLITE3_NAME
 
 import hashlib
 
+from logging import getLogger
+from common.logger import get_logger
+
+
+logger = getLogger(__name__)
+logger = get_logger(logger)
 
 class UserRepository(IUserRepository):
     def __init__(self):
@@ -49,7 +55,19 @@ class UserQuery:
     def query_user_task(self, user_id):
         tasks = db.session.query(Task,Assign).filter(Assign.user_id==user_id).filter(Assign.task_id==Task.task_id).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
         return tasks
-        
+    
+    def count_task_on_user(self):
+        users = db.session.query(User).all()
+        user_list = []
+        for user in users:
+            task_dict = {}
+            for p in Priority:
+                task_dict[p.value]=db.session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(1)).count()
+            logger.info(task_dict)
+            user_list.append({user.user_id:task_dict})
+        logger.info(user_list)
+        return user_list
+
 class User(Base):
     """
     Userテーブル
