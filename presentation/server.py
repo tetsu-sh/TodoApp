@@ -149,3 +149,27 @@ def assign(task_id,user_id):
 
     message = {"message": "success"}
     return message
+
+@app.get("/tasks/undone")
+def get_tasks_undone():
+    task_repository = TaskRepository()
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
+    tasks = task_usecase.get_all_tasks_undone()
+
+    response={
+        "tasks":tasks
+    }
+    return response
+
+@app.get("/tasks/noassign")
+def get_tasks_noassing():
+    task_repository = TaskRepository()
+    assign_repository = AssignRepository()
+    task_usecase = TaskUsecase(task_repository, assign_repository)
+    tasks = task_usecase.get_all_tasks_with_noassign()
+
+    response={
+        "tasks":tasks
+    }
+    return response
