@@ -31,7 +31,6 @@ class TaskRepository(ITaskRepository):
         pass
 
     def create(self, task:Task):
-        print(task)
         new_task = Task(
             task_name = task.task_name,
             task_id = task.task_id,
@@ -52,8 +51,8 @@ class TaskRepository(ITaskRepository):
         return tasks
     
     def update_status(self,task_id,status):
-        print(task_id)
-        print(status)
+        logger.info(task_id)
+        logger.info(status)
         target_task = db.session.query(Task).filter(Task.task_id==task_id).first()
         target_task.status = status
         db.session.commit()
@@ -76,10 +75,12 @@ class TaskQuery():
     def query_tasks_status_undone(self):
         tasks = db.session.query(Task).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
         logger.info(tasks)
+        db.session.close()
         return tasks
 
     def query_tasks_with_noassign(self):
         tasks = db.session.query(Task, Assign).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+        db.session.close()
         return tasks
 
 
@@ -112,7 +113,7 @@ class Task(Base):
         self.task_name = task_name
         self.status  =status
         self.priority = priority
-        self.descriptin = description
+        self.description = description
         self.due_date = due_date
 
 
