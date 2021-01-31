@@ -12,6 +12,9 @@ class TaskUsecase:
         self.assign_repository = assign_repository
 
     def create_task(self,task_name,priority,description,due_date):
+        """
+        タスク登録する
+        """
         task_id = uuid.uuid4()
         user = Task(
             task_id = task_id, 
@@ -29,14 +32,23 @@ class TaskUsecase:
         return tasks
     
     def task_status_wip(self, task_id):
+        """
+        タスクの状態を作業中にする
+        """
         self.task_repository.update_status(task_id, Status(1))
         return
     
     def task_status_done(self, task_id):
+        """
+        タスクの状態を完了にする
+        """
         self.task_repository.update_status(task_id, Status(2))
         return
     
     def assign(self, task_id,user_id):
+        """
+        タスクをユーザにアサインする(アサインを外す・アサインを更新する機能は必須ではないものとする)
+        """
         assign_id = uuid.uuid4()
         assign = Assign(
             assign_id = assign_id,
@@ -50,6 +62,9 @@ class TaskUsecase:
         return assigns
 
     def get_all_tasks_undone(self):
+        """
+        未完了タスクの一覧表示。出力順は作業状態(作業中->未着手)及び、同じ作業状態であれば優先度の高い順とする。
+        """
         query = TaskQuery()
         tasks = query.query_tasks_status_undone()
         # print(tasks)
@@ -57,6 +72,9 @@ class TaskUsecase:
         return tasks
     
     def get_all_tasks_with_noassign(self):
+        """
+        誰にもアサインされていない未完了タスクを一覧表示する。出力順は優先度の高い順とする。
+        """
         # tasks = self.get_all_tasks_undone()
         # assigns = self.get_all_assign()
         # tasks_noassign = []

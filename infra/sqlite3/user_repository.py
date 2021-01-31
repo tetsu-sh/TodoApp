@@ -57,7 +57,7 @@ class UserQuery:
         db.session.close()
         return tasks
     
-    def count_task_on_user(self):
+    def count_wip_task_on_user(self):
         users = db.session.query(User).all()
         user_list = []
         for user in users:
@@ -68,7 +68,7 @@ class UserQuery:
         db.session.close()
         return user_list
 
-    def user_rank(self):
+    def count_done_on_user(self):
         users = db.session.query(User).all()
         user_list = []
         for user in users:

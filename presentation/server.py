@@ -51,15 +51,10 @@ class Task(BaseModel):
 
 @app.post("/user")
 def create_user(user: User):
-    logger.info("start create user")
-
-
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
     user_usecase.create_user(user.user_name)
-
-    message = {"message": "success"}
-    return message
+    return
 
 
 @app.get("/users")
@@ -87,29 +82,21 @@ def delete_user(user_id):
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
     user_usecase.delete_user(user_id)
-
-    message = {"message": "success"}
-    return message
+    return
 
 
 @app.post("/task")
 def create_task(task: Task):
-    logger.info("start create task")
-
-
     task_repository = TaskRepository()
     assign_repository = AssignRepository()
     task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.create_task(task.task_name, task.priority, task.description,task.due_date)
 
-    message = {"message": "success"}
-    return message
+
+    return
 
 @app.get("/tasks")
 def get_all_tasks():
-    logger.info("start create task")
-
-
     task_repository = TaskRepository()
     assign_repository = AssignRepository()
     task_usecase = TaskUsecase(task_repository, assign_repository)
@@ -120,31 +107,23 @@ def get_all_tasks():
     }
     return response
 
-@app.post("/task-wip/{task_id}")
+@app.post("/task/wip/{task_id}")
 def task_wip(task_id):
-    logger.info("start create task")
-
-
     task_repository = TaskRepository()
     assign_repository = AssignRepository()
     task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.task_status_wip(task_id)
+    
+    return
 
-    message = {"message": "success"}
-    return message
-
-@app.post("/task-done/{task_id}")
+@app.post("/task/done/{task_id}")
 def task_done(task_id):
-    logger.info("start create task")
-
-
     task_repository = TaskRepository()
     assign_repository = AssignRepository()
     task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.task_status_done(task_id)
-
-    message = {"message": "success"}
-    return message
+    
+    return
 
 
 @app.post("/assign/{task_id}/{user_id}")
@@ -156,9 +135,8 @@ def assign(task_id,user_id):
     assign_repository = AssignRepository()
     task_usecase = TaskUsecase(task_repository, assign_repository)
     task_usecase.assign(task_id,user_id)
-
-    message = {"message": "success"}
-    return message
+    
+    return
 
 @app.get("/tasks/undone")
 def get_tasks_undone():
@@ -184,8 +162,8 @@ def get_tasks_noassing():
     }
     return response
 
-@app.get("/tokei/users")
-def get_tokei_users():
+@app.get("/users/wip/count")
+def get_users_wip_count():
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
     users = user_usecase.get_task_count()
@@ -195,11 +173,11 @@ def get_tokei_users():
     }
     return response
 
-@app.get("/tokei/rank")
-def get_tokei_rank():
+@app.get("/usrs/done/count")
+def get_users_done_count():
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
-    users = user_usecase.user_rank()
+    users = user_usecase.get_users_done_count()
 
     response={
         "users":users
