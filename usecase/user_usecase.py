@@ -25,3 +25,8 @@ class UserUsecase:
         query = UserQuery()
         tasks = query.query_user_task(user_id)
         return tasks
+
+    def get_task_count(self):
+        query = UserQuery()
+        users = query.count_task_on_user()
+        return users

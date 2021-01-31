@@ -183,3 +183,14 @@ def get_tasks_noassing():
         "tasks":tasks
     }
     return response
+
+@app.get("/tokei/users")
+def get_tokei_users():
+    user_repository = UserRepository()
+    user_usecase = UserUsecase(user_repository)
+    users = user_usecase.get_task_count()
+
+    response={
+        "users":users
+    }
+    return response
