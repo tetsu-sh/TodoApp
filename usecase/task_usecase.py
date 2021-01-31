@@ -1,8 +1,10 @@
 from domain.task_domain import Task, Status, Priority
 from domain.assign_domain import Assign
 import uuid
+from operator import itemgetter
 from domain.interface_task_repository import ITaskRepository
 from domain.interface_assign_repository import IAssignRepository
+from infra.sqlite3.task_repository import TaskQuery
 
 class TaskUsecase:
     def __init__(self, task_repository: ITaskRepository, assign_repository: IAssignRepository) -> None:
@@ -46,14 +48,25 @@ class TaskUsecase:
     def get_all_assign(self):
         assigns = self.assign_repository.load()
         return assigns
+
+    def get_all_tasks_undone(self):
+        query = TaskQuery()
+        tasks = query.query_tasks_status_undone()
+        # print(tasks)
+        # sorted_tasks = sorted(tasks, key=itemgetter("status", "priority"))
+        return tasks
     
-    def get_all_tasks_with_assign(self):
-        tasks = self.get_all_tasks()
-        assigns = self.get_all_assign()
-        for assign in assigns:
-            for task in tasks:
-                if assign.task_id==task.task_id:
-                    task["assigns"]=assign
+    def get_all_tasks_with_noassign(self):
+        # tasks = self.get_all_tasks_undone()
+        # assigns = self.get_all_assign()
+        # tasks_noassign = []
+        # for task in tasks:
+        #     for assign in assigns:
+        #         if task.task_id==assign.task_id:
+        #             tasks.remove(task)
+        #             break
+        query = TaskQuery()
+        tasks = query.query_tasks_with_noassign()
         
         return tasks
 
