@@ -166,7 +166,7 @@ def get_tasks_noassing():
 def get_users_wip_count():
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
-    users = user_usecase.get_task_count()
+    users = user_usecase.get_users_wip_count()
 
     response={
         "users":users
