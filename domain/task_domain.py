@@ -10,11 +10,11 @@ class Task:
         self.due_date = due_date
 
 class Status(enum.Enum):
-    new = 0
-    wip = 1
-    done = 2
+    a = "new"
+    b = "wip"
+    c = "done"
 
 class Priority(enum.Enum):
-    low = 0
-    middle  = 1
-    high = 2
+    a = "low"
+    b  = "middle"
+    c = "high"
