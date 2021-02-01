@@ -33,8 +33,8 @@ class TaskRepository(ITaskRepository):
         new_task = Task(
             task_name = task.task_name,
             task_id = task.task_id,
-            status = task.status.value,
-            priority=task.priority.value,
+            status = task.status,
+            priority=task.priority,
             description=task.description,
             due_date=task.due_date
             )
@@ -94,7 +94,7 @@ class TaskQuery():
     def query_tasks_status_undone(self):
         session = db.session
         try:
-            tasks = session.query(Task).filter(Task.status!=Status(2)).order_by(desc(Task.status),desc(Task.priority)).all()
+            tasks = session.query(Task).filter(Task.status!=Status("done")).order_by(desc(Task.status),desc(Task.priority)).all()
             logger.info(tasks)
             session.close()
             return tasks
@@ -105,7 +105,7 @@ class TaskQuery():
     def query_tasks_with_noassign(self):
         session = db.session
         try:
-            tasks = session.query(Task).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.priority),desc(Task.status)).all()
+            tasks = session.query(Task).filter(Task.status!=Status("done")).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.priority),desc(Task.status)).all()
             session.close()
             return tasks
         except Exception as e:
