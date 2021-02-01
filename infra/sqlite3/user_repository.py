@@ -83,7 +83,7 @@ class UserQuery:
             for user in users:
                 task_dict = {}
                 for p in Priority:
-                    task_dict[p.value]=session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(1)).count()
+                    task_dict[p.value]=session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status("wip")).count()
                 user_list.append({"user_id":user.user_id,"task_count":task_dict})
             session.close()
             return user_list
@@ -97,7 +97,7 @@ class UserQuery:
             users = session.query(User).all()
             user_list = []
             for user in users:
-                tasks = session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(2)).count()
+                tasks = session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status("done")).count()
                 user_list.append({"user_id":user.user_id,"count":tasks})
             user_list = sorted(user_list,key=lambda x:x["count"])
             session.close()
