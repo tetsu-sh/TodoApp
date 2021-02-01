@@ -11,9 +11,5 @@ class IUserRepository(metaclass = ABCMeta):
         pass
 
     @abstractclassmethod
-    def find(self, user_id):
-        pass
-
-    @abstractclassmethod
     def delete(self, user_id):
         pass
