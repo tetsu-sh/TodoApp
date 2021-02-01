@@ -33,55 +33,84 @@ class TaskRepository(ITaskRepository):
         new_task = Task(
             task_name = task.task_name,
             task_id = task.task_id,
-            status = task.status,
-            priority=task.priority,
+            status = task.status.value,
+            priority=task.priority.value,
             description=task.description,
             due_date=task.due_date
             )
-        db.session.add(new_task)
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:
+            session.add(new_task)
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
+
     
     def load(self):
-        tasks = db.session.query(Task).all()
-        db.session.close()
-        logger.info(tasks)
-        return tasks
+        session = db.session
+        try:
+            tasks = session.query(Task).all()
+            session.close()
+            logger.info(tasks)
+            return tasks
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
+        
     
     def update_status(self,task_id,status):
         logger.info(task_id)
         logger.info(status)
-        target_task = db.session.query(Task).filter(Task.task_id==task_id).first()
-        target_task.status = status
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:    
+            target_task = session.query(Task).filter(Task.task_id==task_id).first()
+            target_task.status = status
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
-    def find(self):
-        pass
 
     def delete(self, task_id):
-        db.session.query(Task).filter(Task.task_id==task_id).delete()
-        db.session.commit()
-        db.session.close()
-        return
+        session=db.session
+        try:
+            session.query(Task).filter(Task.task_id==task_id).delete()
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
 class TaskQuery():
     def __init__(self) -> None:
         pass
     
     def query_tasks_status_undone(self):
-        tasks = db.session.query(Task).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
-        logger.info(tasks)
-        db.session.close()
-        return tasks
+        session = db.session
+        try:
+            tasks = session.query(Task).filter(Task.status!=Status(2)).order_by(desc(Task.status),desc(Task.priority)).all()
+            logger.info(tasks)
+            session.close()
+            return tasks
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
     def query_tasks_with_noassign(self):
-        tasks = db.session.query(Task).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
-        db.session.close()
-        return tasks
-
+        session = db.session
+        try:
+            tasks = session.query(Task).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.priority),desc(Task.status)).all()
+            session.close()
+            return tasks
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
 class Task(Base):
     """

@@ -16,47 +16,66 @@ from sqlalchemy_utils import UUIDType
 
 import hashlib
 
+from logging import getLogger
+from common.logger import get_logger
+
+
+logger = getLogger(__name__)
+logger = get_logger(logger)
 
 class AssignRepository(IAssignRepository):
     def __init__(self):
         pass
 
     def create(self, assign:Assign):
-        print(assign)
         new_assign = Assign(
             assign_id = assign.assign_id,
             task_id = assign.task_id,
             user_id = assign.user_id
             )
-        db.session.add(new_assign)
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:
+            session.add(new_assign)
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
     
     def load(self):
-        assigns = db.session.query(Assign).all()
-        db.session.close()
-        print(assigns)
-        return assigns
-    
-    def update_status(self,assign_id,status):
-        print(assign_id)
-        print(status)
-        target_assign = db.session.query(Assign).filter(Assign.assign_id==assign_id)
-        target_assign.status = status
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:
+            assigns = session.query(Assign).all()
+            session.close()
+            return assigns
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
-    def find(self):
-        pass
+
+    def update_status(self,assign_id,status):
+        session = db.session
+        try:
+            target_assign = session.query(Assign).filter(Assign.assign_id==assign_id)
+            target_assign.status = status
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
     def delete(self, assign_id):
-        db.session.query(Assign).filter(Assign.assign_id==assign_id).delete()
-        db.session.commit()
-        db.session.close()
-        return
-
+        session = db.session
+        try:
+            session.query(Assign).filter(Assign.assign_id==assign_id).delete()
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
 
 

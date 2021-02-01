@@ -26,24 +26,39 @@ class UserRepository(IUserRepository):
 
     def create(self, user:User):
         new_user = User(user_name = user.user_name,user_id = user.user_id)
-        db.session.add(new_user)
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:
+            session.add(new_user)
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
+        
     
     def load(self):
-        users = db.session.query(User).all()
-        db.session.close()
-        return users
+        session = db.session
+        try:
+            users = db.session.query(User).all()
+            session.close()
+            return users
 
-    def find(self):
-        pass
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
+
 
     def delete(self, user_id):
-        db.session.query(User).filter(User.user_id==user_id).delete()
-        db.session.commit()
-        db.session.close()
-        return
+        session = db.session
+        try:
+            session.query(User).filter(User.user_id==user_id).delete()
+            session.commit()
+            session.close()
+            return
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
 
 class UserQuery:
@@ -51,30 +66,45 @@ class UserQuery:
         pass
 
     def query_user_task(self, user_id):
-        tasks = db.session.query(Task,Assign).filter(Assign.user_id==user_id).filter(Assign.task_id==Task.task_id).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
-        db.session.close()
-        return tasks
+        session  =db.session
+        try:
+            tasks = db.session.query(Task,Assign).filter(Assign.user_id==user_id).filter(Assign.task_id==Task.task_id).filter(Task.status!=Status(2)).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+            db.session.close()
+            return tasks
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
     
     def count_wip_task_on_user(self):
-        users = db.session.query(User).all()
-        user_list = []
-        for user in users:
-            task_dict = {}
-            for p in Priority:
-                task_dict[p.value]=db.session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(1)).count()
-            user_list.append({"user_id":user.user_id,"task_count":task_dict})
-        db.session.close()
-        return user_list
+        session = db.session
+        try:
+            users = session.query(User).all()
+            user_list = []
+            for user in users:
+                task_dict = {}
+                for p in Priority:
+                    task_dict[p.value]=session.query(Task,User,Assign).filter(Task.priority==p).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(1)).count()
+                user_list.append({"user_id":user.user_id,"task_count":task_dict})
+            session.close()
+            return user_list
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
     def count_done_on_user(self):
-        users = db.session.query(User).all()
-        user_list = []
-        for user in users:
-            tasks = db.session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(2)).count()
-            user_list.append({"user_id":user.user_id,"count":tasks})
-        user_list = sorted(user_list,key=lambda x:x["count"])
-        db.session.close()
-        return user_list
+        session = db.session
+        try:
+            users = session.query(User).all()
+            user_list = []
+            for user in users:
+                tasks = session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status(2)).count()
+                user_list.append({"user_id":user.user_id,"count":tasks})
+            user_list = sorted(user_list,key=lambda x:x["count"])
+            session.close()
+            return user_list
+        except Exception as e:
+            session.close()
+            logger.exception(str(e))
 
 class User(Base):
     """
