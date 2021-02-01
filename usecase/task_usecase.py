@@ -19,7 +19,7 @@ class TaskUsecase:
         task = Task(
             task_id = task_id, 
             task_name = task_name, 
-            status=Status(0), 
+            status=Status("new"), 
             priority=Priority(priority),
             description=description,
             due_date=due_date
@@ -38,14 +38,14 @@ class TaskUsecase:
         """
         タスクの状態を作業中にする
         """
-        self.task_repository.update_status(task_id, Status(1))
+        self.task_repository.update_status(task_id, Status("wip"))
         return
     
     def task_status_done(self, task_id):
         """
         タスクの状態を完了にする
         """
-        self.task_repository.update_status(task_id, Status(2))
+        self.task_repository.update_status(task_id, Status("done"))
         return
     
     def assign(self, task_id,user_id):

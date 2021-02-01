@@ -17,6 +17,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 
+from domain.task_domain import Priority
+
 
 app = FastAPI()
 
@@ -34,7 +36,7 @@ class User(BaseModel):
 
 class Task(BaseModel):
     task_name: str
-    priority: int
+    priority: Priority
     description: str
     due_date: datetime
 
@@ -42,7 +44,7 @@ class Task(BaseModel):
         schema_extra = {
             "example":{
                 "task_name":"test_task",
-                "priority": 1,
+                "priority": Priority("middle"),
                 "description":"test_description",
                 "due_date": datetime.now() + timedelta(days=2)
             }
