@@ -13,7 +13,6 @@ from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
 
-from infra.sqlite3.settings import SQLITE3_NAME
 
 import hashlib
 

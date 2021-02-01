@@ -1,1 +1,0 @@
-SQLITE3_NAME = "infra.sqlite3.db.sqlite3"
