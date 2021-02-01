@@ -34,7 +34,6 @@ class UserRepository(IUserRepository):
     def load(self):
         users = db.session.query(User).all()
         db.session.close()
-        print(users)
         return users
 
     def find(self):
