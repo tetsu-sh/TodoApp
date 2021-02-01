@@ -6,11 +6,14 @@ class IAssignRepository(metaclass = ABCMeta):
     def create(self, assign:Assign):
         pass
 
+    @abstractclassmethod
     def load(self):
         pass
 
-    def find(self, user_id):
+    @abstractclassmethod
+    def find(self, assign_id):
         pass
 
-    def delete(self, user_id):
+    @abstractclassmethod
+    def delete(self, assign_id):
         pass

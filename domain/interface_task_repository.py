@@ -5,12 +5,13 @@ class ITaskRepository(metaclass = ABCMeta):
     @abstractclassmethod
     def create(self, task:Task):
         pass
-
+    @abstractclassmethod
     def load(self):
         pass
-
-    def find(self, user_id):
+    @abstractclassmethod
+    def find(self, task_id):
         pass
 
-    def delete(self, user_id):
+    @abstractclassmethod
+    def delete(self, task_id):
         pass
