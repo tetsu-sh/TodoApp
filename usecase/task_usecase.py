@@ -28,6 +28,9 @@ class TaskUsecase:
         return
 
     def get_all_tasks(self):
+        """
+        タスク一覧を取得
+        """
         tasks = self.task_repository.load()
         return tasks
     
@@ -75,14 +78,7 @@ class TaskUsecase:
         """
         誰にもアサインされていない未完了タスクを一覧表示する。出力順は優先度の高い順とする。
         """
-        # tasks = self.get_all_tasks_undone()
-        # assigns = self.get_all_assign()
-        # tasks_noassign = []
-        # for task in tasks:
-        #     for assign in assigns:
-        #         if task.task_id==assign.task_id:
-        #             tasks.remove(task)
-        #             break
+
         query = TaskQuery()
         tasks = query.query_tasks_with_noassign()
         
