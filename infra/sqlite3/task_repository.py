@@ -118,8 +118,8 @@ class Task(Base):
  
     task_id       : 主キー
     task_name : タスク名
-    status : ステータス 0:未着手, 1:着手中,2:完了
-    priority : 優先度 0:低,1:中,2:高
+    status : ステータス a:new(未着手), b:wip(着手中),c:done(完了)
+    priority : 優先度 a:low(低),b:middle(中),c:high(高)
     description : 詳細
     due_date : 期日
     """
