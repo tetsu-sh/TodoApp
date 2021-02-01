@@ -79,7 +79,7 @@ class TaskQuery():
         return tasks
 
     def query_tasks_with_noassign(self):
-        tasks = db.session.query(Task, Assign).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.status)).order_by(desc(Task.priority)).join(Assign,Task.task_id==Assign.task_id).all()
+        tasks = db.session.query(Task).filter(Task.status!=Status(2)).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
         db.session.close()
         return tasks
 
