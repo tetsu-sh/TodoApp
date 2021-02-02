@@ -26,5 +26,5 @@ python create_table.py
 ```
 uvicorn presentation.server:app --reload
 ```
-- http://localhost:8000のサーバーが立ち上がる
-- http://localhost:8000/docs# swaggarが立ち上がるので、そちらでAPIの確認及び実行をできる
+- http://localhost:8000　にサーバーが立ち上がる
+- http://localhost:8000/docs# 　でswaggarが立ち上がるので、そちらでAPIの確認及び実行をできる
