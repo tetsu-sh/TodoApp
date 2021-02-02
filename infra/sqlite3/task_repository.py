@@ -10,6 +10,7 @@ from infra.sqlite3.assign_repository import Assign
 import enum
 from sqlalchemy import Column, String, DateTime, ForeignKey, Enum, desc
 from sqlalchemy.sql.functions import current_timestamp
+from sqlalchemy.sql import exists
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
 
@@ -105,7 +106,9 @@ class TaskQuery():
     def query_tasks_with_noassign(self):
         session = db.session
         try:
-            tasks = session.query(Task).filter(Task.status!=Status("done")).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.priority),desc(Task.status)).all()
+            # tasks = session.query(Task).filter(Task.status!=Status("done")).filter(Task.task_id!=Assign.task_id).order_by(desc(Task.priority),desc(Task.status)).all()
+            tasks = session.query(Task).filter(Task.status!=Status("done")).outerjoin(Assign,Task.task_id==Assign.task_id).filter(Assign.task_id==None).order_by(desc(Task.priority),desc(Task.status)).all()
+            
             session.close()
             return tasks
         except Exception as e:
