@@ -96,7 +96,7 @@ class UserQuery:
             for user in users:
                 tasks = session.query(Task,Assign).filter(Assign.user_id==user.user_id).filter(Assign.task_id==Task.task_id).filter(Task.status==Status("done")).count()
                 user_list.append({"user_id":user.user_id,"count":tasks})
-            user_list = sorted(user_list,key=lambda x:x["count"])
+            user_list = sorted(user_list,key=lambda x:x["count"], reverse=True)
             session.close()
             return user_list
         except Exception as e:
