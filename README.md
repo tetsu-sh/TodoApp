@@ -28,3 +28,4 @@ uvicorn presentation.server:app --reload
 ```
 - http://localhost:8000　にサーバーが立ち上がる
 - http://localhost:8000/docs# 　でswaggarが立ち上がるので、そちらでAPIの確認及び実行をできる
+- タスク作成時、priorityは"high", "middle", "low"のいずれかを入力する。
