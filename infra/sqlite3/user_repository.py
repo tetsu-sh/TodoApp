@@ -68,7 +68,7 @@ class UserQuery:
     def query_user_task(self, user_id):
         session  =db.session
         try:
-            tasks = db.session.query(Task).filter(Assign.task_id==Task.task_id).filter(Assign.user_id==user_id).filter(Task.status!=Status("done")).order_by(desc(Task.status)).order_by(desc(Task.priority)).all()
+            tasks = db.session.query(Task).filter(Assign.task_id==Task.task_id).filter(Assign.user_id==user_id).filter(Task.status!=Status("done")).order_by(desc(Task.status),desc(Task.priority)).all()
             db.session.close()
             return tasks
         except Exception as e:
