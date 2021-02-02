@@ -30,12 +30,12 @@ class UserUsecase:
         self.user_repository.delete(user_id)
         return
         
-    def get_user_task(self, user_id):
+    def get_user_task_undone(self, user_id):
         """
         あるユーザが担当している未完了のタスクを一覧表示する。出力順は作業状態(作業中->未着手)及び、同じ作業状態であれば優先度の高い順とする。
         """
         query = UserQuery()
-        tasks = query.query_user_task(user_id)
+        tasks = query.query_user_tasks_undone(user_id)
         return tasks
 
     def get_users_wip_count(self):

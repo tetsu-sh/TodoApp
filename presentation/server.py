@@ -74,14 +74,14 @@ def get_all_users():
     }
     return response
 
-@app.get("/user/tasks/{user_id}")
-def get_user_tasks(user_id):
+@app.get("/user/tasks/undone/{user_id}")
+def get_user_tasks_undone(user_id):
     """
     あるユーザが担当している未完了のタスクを一覧表示する。出力順は作業状態(作業中->未着手)及び、同じ作業状態であれば優先度の高い順とする。
     """
     user_repository = UserRepository()
     user_usecase = UserUsecase(user_repository)
-    tasks = user_usecase.get_user_task(user_id)
+    tasks = user_usecase.get_user_task_undone(user_id)
     response={
         "tasks":tasks
     }
@@ -179,7 +179,7 @@ def get_tasks_undone():
     return response
 
 @app.get("/tasks/noassign")
-def get_tasks_noassing():
+def get_tasks_noassign():
     """
     誰にもアサインされていない未完了タスクを一覧表示する。出力順は優先度の高い順とする。
     """
