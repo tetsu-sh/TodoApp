@@ -16,7 +16,6 @@ from fastapi.testclient import TestClient
 class TestTodo(unittest.TestCase):
 
     def setUp(self) -> None:
-        print("start")
         self.inmemory_user_repository=InmemoryUserRepository()
         self.inmemory_task_repository=InmemoryTaskRepository()
         self.inmemory_assign_repository=InmemoryAssignRepository()
@@ -31,13 +30,12 @@ class TestTodo(unittest.TestCase):
         self.test_create_user()
         user_usecase = UserUsecase(self.inmemory_user_repository)
         users = user_usecase.get_all_users()
-        print(users)
         assert users["users"][0]["user_name"]=="mock_user"
     
     def test_create_task(self):
         task_usecase=TaskUsecase(self.inmemory_task_repository,self.inmemory_assign_repository)
         mock_task_name = "mock_task"
-        mock_priority = 2
+        mock_priority = "middle"
         mock_description = "mock_description"
         mock_due_date = "2021-02-03T21:43:25.814250"
         task_usecase.create_task(mock_task_name,mock_priority, mock_description,mock_due_date)
@@ -45,7 +43,7 @@ class TestTodo(unittest.TestCase):
         assert self.inmemory_task_repository.data[0]["priority"] == Priority(mock_priority)
         assert self.inmemory_task_repository.data[0]["description"] == mock_description
         assert self.inmemory_task_repository.data[0]["due_date"] == mock_due_date
-        assert self.inmemory_task_repository.data[0]["status"] == Status(0)
+        assert self.inmemory_task_repository.data[0]["status"] == Status("new")
 
     def test_assign(self):
         self.test_create_user()
@@ -62,11 +60,11 @@ class TestTodo(unittest.TestCase):
         task_usecase=TaskUsecase(self.inmemory_task_repository,self.inmemory_assign_repository)
         mock_task_id = self.inmemory_task_repository.data[0]["task_id"]
         task_usecase.task_status_wip(mock_task_id)
-        assert self.inmemory_task_repository.data[0]["status"] == Status(1)
+        assert self.inmemory_task_repository.data[0]["status"] == Status("wip")
     
     def test_status_done(self):
         self.test_assign()
         task_usecase=TaskUsecase(self.inmemory_task_repository,self.inmemory_assign_repository)
         mock_task_id = self.inmemory_task_repository.data[0]["task_id"]
         task_usecase.task_status_done(mock_task_id)
-        assert self.inmemory_task_repository.data[0]["status"] == Status(2)
+        assert self.inmemory_task_repository.data[0]["status"] == Status("done")
