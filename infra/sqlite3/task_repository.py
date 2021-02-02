@@ -9,14 +9,8 @@ from infra.sqlite3.assign_repository import Assign
 
 import enum
 from sqlalchemy import Column, String, DateTime, ForeignKey, Enum, desc
-from sqlalchemy.sql.functions import current_timestamp
-from sqlalchemy.sql import exists
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
-
-
-import hashlib
-
 
 from logging import getLogger
 from common.logger import get_logger

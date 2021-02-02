@@ -1,7 +1,6 @@
 from domain.task_domain import Task, Status, Priority
 from domain.assign_domain import Assign
 import uuid
-from operator import itemgetter
 from domain.interface_task_repository import ITaskRepository
 from domain.interface_assign_repository import IAssignRepository
 from infra.sqlite3.task_repository import TaskQuery

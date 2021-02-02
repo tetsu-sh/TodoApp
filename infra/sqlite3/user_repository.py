@@ -6,12 +6,9 @@ import infra.sqlite3.db as db
 from infra.sqlite3.task_repository import Task, Status,Priority
 from infra.sqlite3.assign_repository import Assign
 
-from sqlalchemy import Column, String, DateTime, ForeignKey,desc,func
-from sqlalchemy.sql.functions import current_timestamp
+from sqlalchemy import Column, String, DateTime, ForeignKey,desc
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy_utils import UUIDType
-
-import hashlib
 
 from logging import getLogger
 from common.logger import get_logger

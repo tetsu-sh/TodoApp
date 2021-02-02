@@ -9,12 +9,9 @@ from infra.sqlite3.user_repository import User
 
 import enum
 from sqlalchemy import Column, String, DateTime, ForeignKey, Enum
-from sqlalchemy.sql.functions import current_timestamp
 from sqlalchemy.dialects.mysql import INTEGER, BOOLEAN
 from sqlalchemy.schema import ForeignKey
 from sqlalchemy_utils import UUIDType
-
-import hashlib
 
 from logging import getLogger
 from common.logger import get_logger
